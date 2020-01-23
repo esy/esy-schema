@@ -1,0 +1,8 @@
+{
+  "esy": "https://raw.githubusercontent.com/esy/esy/master/package.json",
+  "esy-freetype2": "https://raw.githubusercontent.com/esy-packages/esy-freetype2/master/package.json",
+  "esy-python": "https://raw.githubusercontent.com/esy-packages/esy-python/master/package.json",
+  "esy-gmp": "https://raw.githubusercontent.com/esy-packages/esy-gmp/master/package.json",
+  "@esy-ocaml/hello-ocaml": "https://raw.githubusercontent.com/esy-ocaml/hello-ocaml/master/package.json",
+  "@esy-ocaml/flow-parser": "https://raw.githubusercontent.com/esy-ocaml/flow-parser/master/package.json"
+}

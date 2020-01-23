@@ -1,0 +1,214 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "JSON schema for ESY or NPM package.json files",
+  "definitions": {
+    "cmdsDef": {
+      "oneOf": [{
+          "type": "array",
+          "items": {
+            "oneOf": [{
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              }
+            ]
+          },
+          "minItems": 1
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "sandboxConfig": {
+      "type": "object",
+      "properties": {
+        "build": {
+          "description": "List of commands that describe how your package's default targets should be built when package is being used as a dependency",
+          "default": ["dune build -p #{self.name}"],
+          "allOf": [{
+            "$ref": "#/definitions/cmdsDef"
+          }]
+        },
+        "buildDev": {
+          "description": "List of commands that describe how your package's default targets should be built when package is being developed",
+          "default": ["dune build -p #{self.name}"],
+          "allOf": [{
+            "$ref": "#/definitions/cmdsDef"
+          }]
+        },
+        "install": {
+          "description": "Allows to specify a list of commands which should move built artifacts to #{self.install} location.",
+          "allOf": [{
+            "$ref": "#/definitions/cmdsDef"
+          }]
+        },
+        "buildsInSource": {
+          "description": "Allows to modify the building mode. Dune / OcamlBuild users should use \"_build\"",
+          "enum": ["_build", true, false],
+          "default": false
+        },
+        "exportedEnv": {
+          "description": "Exports new environment variables to the esy build environment, used when package is built as a dependency",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "val": {
+                "type": "string",
+                "description": "New value of the environment variable. It can use esy's variable substitution syntax"
+              },
+              "scope": {
+                "enum": ["global", "local"],
+                "description": "Defines the scope of the environment variable (either global or local)"
+              }
+            },
+            "required": ["val", "scope"]
+          },
+          "minProperties": 1
+        },
+        "buildEnv": {
+          "description": "Exports new environment variables to the build environment of the current package",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "minProperties": 1
+        }
+      }
+    },
+    "esyDef": {
+      "properties": {
+        "esy": {
+          "allOf": [{
+            "$ref": "#/definitions/sandboxConfig"
+          }],
+          "description": "Additional information needed by esy to build, install or release the project",
+          "required": [
+            "build"
+          ],
+          "properties": {
+            "release": {
+              "description": "Additional information needed for esy-release, including the binaries that should be added to the PATH",
+              "type": "object",
+              "anyOf": [{
+                  "required": ["bin"],
+                  "properties": {
+                    "bin": {
+                      "description": "List of all executable names which must be made available on $PATH when release is installed on user machine",
+                      "oneOf": [{
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "required": ["releasedBinaries"],
+                  "properties": {
+                    "releasedBinaries": {
+                      "description": "[DEPRECATED] Use `bin` instead !",
+                      "oneOf": [{
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ],
+              "properties": {
+                "includePackages": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Project dependencies that must be bundled as part of the project's release",
+                  "minItems": 1
+                },
+                "rewritePrefix": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Activate path rewriting in artifcats during release installation"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "overrideDef": {
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "Defines the origin configuration which is being overriden. To use only with \"override\"",
+          "default": "./package.json"
+        },
+        "override": {
+          "allOf": [{
+            "$ref": "#/definitions/sandboxConfig"
+          }],
+          "description": "Used to specify sandbox configuration overrides, based on the configuration given with the \"source\" keyword",
+          "properties": {
+            "buildEnvOverride": {
+              "description": "Overrides buildEnv by adding or deleting environment variables",
+              "type": "object",
+              "additionalProperties": {
+                "type": ["string", "null"]
+              },
+              "minProperties": 1
+            },
+            "exportedEnvOverride": {
+              "description": "Overrides exportedEnv by adding or deleting environment variables. Set an environment variable to null to remove it from preexisting exported environment",
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": {
+                "oneOf": [{
+                    "type": "null"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "val": {
+                        "type": "string",
+                        "description": "New value of the environment variable. It can use esy's variable substitution syntax"
+                      },
+                      "scope": {
+                        "enum": ["global", "local"],
+                        "description": "Defines the scope of the environment variable (either global or local)"
+                      }
+                    },
+                    "required": ["val", "scope"]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "allOf": [{
+    "$ref": "http://json.schemastore.org/package#"
+  }, {
+    "$ref": "#/definitions/esyDef"
+  }, {
+    "$ref": "#/definitions/overrideDef"
+  }]
+}

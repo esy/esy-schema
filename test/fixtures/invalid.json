@@ -1,0 +1,52 @@
+[{
+	"name": "esy-no-build",
+	"version": "0.0.0",
+	"esy": {
+		"install": ["make install"]
+	}
+},
+{
+	"name": "exportedenv-no-scope",
+	"version": "2000",
+	"override": {
+		"exportedEnv": {
+			"SOME_VAR": {
+				"val": "#{$some_new_val}"
+			}
+		}
+	}
+},
+{
+	"name": "exportedenv-incorrect-scope",
+	"version": "0.0.0",
+	"override": {
+		"exportedEnv": {
+			"SOME_VAR": {
+				"val": "#{$some_new_val}",
+				"scope": "some_incorrect_scope"
+			}
+		}
+	}
+},
+{
+	"name": "release-no-bin",
+	"version": "0.0.0",
+	"esy": {
+		"build": ["dune build @all"],
+		"release": {
+			"includePackages": ["ocaml"]
+		}
+	}
+},
+{
+	"name": "release-include-packages-empty",
+	"version": "0.0.0",
+	"esy": {
+		"build": ["dune build @all"],
+		"release": {
+			"bin": ["refmt"],
+			"includePackages": []
+		}
+	}
+}
+]

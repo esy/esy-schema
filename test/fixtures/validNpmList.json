@@ -1,0 +1,7 @@
+{
+  "lodash": "https://raw.githubusercontent.com/lodash/lodash/master/package.json",
+  "request": "https://raw.githubusercontent.com/request/request/master/package.json",
+  "express": "https://raw.githubusercontent.com/expressjs/express/master/package.json",
+  "react": "https://raw.githubusercontent.com/facebook/react/master/package.json",
+  "bluebird": "https://raw.githubusercontent.com/petkaantonov/bluebird/master/package.json"
+}

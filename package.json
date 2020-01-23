@@ -1,0 +1,34 @@
+{
+    "name": "esy-schema",
+    "displayName": "esy-schema",
+    "private": true,
+    "description": "Json schema for esy",
+    "version": "0.0.1",
+    "publisher": "esy",
+    "keywords": [
+        "esy",
+        "ocaml",
+        "reason",
+        "json",
+        "schema"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/esy/esy-schema"
+    },
+    "license": "MIT",
+    "scripts": {
+        "test": "mocha --ui tdd --require @babel/register test"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.8.3",
+        "@babel/polyfill": "^7.8.3",
+        "@babel/preset-env": "^7.8.3",
+        "@babel/register": "^7.8.3",
+        "jsonschema": "^1.2.5",
+        "mocha": "^7.0.0",
+        "request": "^2.88.0",
+        "request-promise": "^4.2.5",
+        "should": "^13.2.3"
+    }
+}
